@@ -1,0 +1,494 @@
+jQuery(function(){
+
+	//jQuery("#mobileMenu").hide();
+	jQuery(".toggleMobile").click(function()
+	{
+		jQuery(this).toggleClass("active");
+		jQuery("#mobileMenu").slideToggle(500);
+	});
+
+	jQuery('body').delegate('.addMore','click',function(){
+		a = jQuery(this);
+		mem = a.prev().clone();
+		mem.find('input').val('');
+		a.before(mem.addClass('extra'));
+		jQuery(a.prev().find(':input:visible').get(0)).focus();
+	});
+
+	jQuery('body').delegate('.logout,#loginInfo .settingsMenu a','click',function(){
+		showLoading();
+		a = jQuery(this);
+		if(a.hasClass("logout")){
+			jQuery.post("includes/checkLogin.php","logout=y",function(data){
+				window.location.reload();
+			});
+		}
+		else if(a.hasClass("settings")){
+			hideLoading();
+			a.parent().next('.settingsMenu').toggle();
+		}
+		else if(a.hasClass("changePass")){
+			rel = a.attr('rel');
+			a.parent().hide();
+			jQuery.post("includes/addEditStaff.php", "id="+rel+"&mode=form&changePass=y", function(response) {
+				if(a.hasClass("changePass")){
+					hideLoading();
+					showOverlay();
+					cont = jQuery('#addEditStaffCont');
+					cont = cont.length?cont:jQuery('<div id="'+'addEditStaffCont'+'" class="popFormCont"></div>');
+					jQuery('body').find('#addEditStaffCont').length?cont.html(response):jQuery('body').append(cont.html(response));
+					cont.css('margin-top',(-1*(cont.height()/2))+'px').show()
+				}
+			});
+		}
+	});
+
+
+	jQuery('body').delegate('.addArticle,.editArticle','click', function(){
+		//btn = jQuery(this);
+		id  = this.id;
+		postData = 'mode=form&action=';
+		postData += id==''?'add':('edit&aid='+id);
+		postData += '&sid='+this.rel;
+		
+		showLoading();
+		jQuery.post('includes/addEditArticle.php', postData, function(response){
+			showOverlay();
+			cont = jQuery('#addEditArticleCont');
+			cont = cont.length?cont:jQuery('<div id="'+'addEditArticleCont'+'" class="popFormCont"></div>');
+			jQuery('body').find('#addEditArticleCont').length?cont.html(response):jQuery('body').append(cont.html(response));
+			//cont.css('margin-top',(-1*(cont.height()/2))+'px').show();
+			cont.show();
+			hideLoading();
+		});
+	});
+
+	jQuery('body').delegate('.published,.unpublished','click', function(){
+		//btn = jQuery(this);
+		id  = this.id;
+		postData = 'mode=showHide&showHide=';
+		postData += jQuery(this).hasClass('published')?'published':'unpublished';
+		postData += '&aid='+this.id+'&sid='+this.rel;
+		
+		showLoading();
+		jQuery.post('includes/addEditArticle.php', postData, function(response){
+			window.location.reload();
+			//hideLoading();
+		});
+	});
+
+	jQuery('body').delegate('.addAlbum,.editAlbum','click', function() {
+		showLoading();
+		id  = this.id;
+		jQuery.post("includes/addEditGallery.php","type=form&sid="+this.rel+(id==''?'':'&id='+id),function(form){
+			showOverlay();
+			cont = jQuery('#addEditArticleCont');
+			cont = cont.length?cont:jQuery('<div id="'+'addEditArticleCont'+'" class="popFormCont"></div>');
+			jQuery('body').find('#addEditArticleCont').length?cont.html(form):jQuery('body').append(cont.html(form));
+			//cont.css('margin-top',(-1*(cont.height()/2))+'px').show();
+			cont.show();
+			hideLoading();
+		});
+	});
+
+	jQuery('body').delegate('.addAPRow','click', function() {
+		fc = jQuery(this).closest('tbody').find('input[type=file]').length;
+		if(fc>=15){
+			alert('Sorry! cannot upload more than 15.');
+		}			
+		else{
+			jQuery(this).closest('tr').before(jQuery(this).closest('tr').prev().clone(true).find('input').val('').end());
+			//jQuery(this).closest('.popFormCont').center();
+		}
+	});
+
+
+	jQuery('body').delegate('.publishBtn,.deleteBtn,.resetPass','click', function(){
+		btn = jQuery(this);
+		rel = btn.attr('rel');
+		//type = btn.hasClass('addBtn')?'add':(btn.hasClass('editBtn')?'edit':(btn.hasClass('activateBtn')?'activate':'form'));
+		showLoading();
+
+		//mode = btn.hasClass('activateBtn')?'activate':(btn.hasClass('deleteBtn')?'deactivate':'form');
+		mode = btn.attr('mode');
+
+		id = false;
+		if(btn.hasClass('publishBtn') || btn.hasClass('deleteBtn') || btn.hasClass('resetPass')){
+			id = btn.closest('tr').find('td:first').attr('rel');
+		}
+		page = "includes/addEdit"+rel+".php";
+		postData = "type="+mode+(id?('&id='+id):'');
+		if(btn.hasClass('resetPass')) {
+			postData = 'mode=edit&resetPass=1'+(id?('&id='+id):'');
+			mode = 'reset';
+		}
+		showLoading();
+		jQuery.post(page, postData, function(response){
+			if(mode=='form'){
+				showOverlay();
+				cont = jQuery('#addEdit'+rel+'Cont');
+				cont = cont.length?cont:jQuery('<div id="'+'addEdit'+rel+'Cont'+'" class="popFormCont"></div>');
+				jQuery('body').find('#addEdit'+rel+'Cont').length?cont.html(response):jQuery('body').append(cont.html(response));
+				cont.css('margin-top',(-1*(cont.height()/2))+'px').show();
+				hideLoading();
+			}
+			else{
+				alert(response);
+				window.location.reload();
+			}
+		});
+	});
+
+
+	jQuery("body").delegate(".popFormCont .close","click",function(){
+		hideOverlay();
+		jQuery(this).closest('.popFormCont').html('').hide();
+		return false;
+	});
+
+
+	jQuery("body").delegate(".tabs .tab", "click", function(e){
+		a = jQuery(this);
+		a.parent().find('.tab').removeClass('on').end().find('.tabCont').hide();
+		a.addClass('on');
+		jQuery('#'+a.attr('rel')+'Cont').show().find('form').submit();
+
+	});
+
+	if(jQuery.find('.imageSlider').length){
+		jQuery('.imageSlider ul li:first-child').addClass('current');
+		jQuery('.imageSlider ul').imageSlider({
+			dots: true,
+			arrows: false,
+			time: 6000,
+			animation: "fade"
+		});/**/
+	}
+
+	jQuery("body").delegate("#reload",'click', function() {
+		jQuery(this).prev().remove();
+		var id = Math.random();
+		jQuery(this).before(jQuery('<img id="img" src="includes/captcha.php?id='+id+'"/>'));
+		id ='';
+	});
+
+	if(jQuery("a[rel^='lightbox']").length)  jQuery("a[rel^='lightbox']").slimbox({/* Put custom options here */}, null);
+});
+
+jQuery(window).on("resize", function(){
+	if(jQuery(this).width() > 765)
+	{
+		jQuery("#mobileMenu").hide();
+		jQuery(".toggleMobile").removeClass("active");
+	}
+});
+
+function showOverlay(){if(!jQuery('#overlay').length)jQuery('body').append(jQuery('<div>').attr('id','overlay'));}
+function hideOverlay(){if(jQuery('#overlay').length)jQuery('#overlay').remove();}
+function showLoading(){if(!jQuery('#loading').length)jQuery('body').append(jQuery('<div>').attr('id','loading'));}
+function hideLoading(){if(jQuery('#loading').length)jQuery('#loading').remove();}
+
+function checkLogin(form){
+	showLoading();
+	var uname = jQuery(form).find('input[name=username]');
+	var passw = jQuery(form).find('input[name=password]');
+	if(uname.val().trim()=="") {
+		alert("Please enter the username.");
+		uname.focus();
+		hideLoading();
+		return false;
+	}
+	if(passw.val().trim()=="") {
+		alert("Please enter the password.");
+		passw.focus();
+		hideLoading();
+		return false;
+	}
+
+	var postData = form?("username="+uname.val().trim()+"&password="+passw.val().trim()):"logout=y";
+	var action   = jQuery(form).attr('action');
+
+	jQuery.post(action,postData,function(data){
+		//alert(data);
+		if(data=='logout') window.location.href = '/'
+		else if(data=='n') {
+			alert("Sorry the username and the password doesn't match.");
+			hideLoading();
+		}
+		else {
+			//d = JSON.parse(data);
+			window.location.reload();
+			//console.log(data);
+		}
+		
+	});
+	return false;
+}
+
+function updateSimpleForm(form){
+	var post = true;
+	
+	jQuery(form).find(':input').each(function(i){
+		if(jQuery(this).hasClass('mandat') && jQuery(this).val()=='') {
+			post = false;
+			if(this.name=='member[]') alert('Please provide atleast three band members.');
+			else alert(jQuery(this).parent().prev().text()+' cannot be empty.');
+			jQuery(this).focus();
+			return false;
+		}
+	});
+
+	if(jQuery(form).find('input[name=termsCheck]').length){
+		if(!jQuery(form).find('input[name=termsCheck]').is(':checked')){
+			post = false;
+			alert("Please accept the terms and conditions.");
+			return false;
+		}
+	}
+	
+	if(post){
+		jQuery('a',form).attr('onclick','');
+		hideOverlay();
+		showLoading();
+		action = jQuery(form).attr('action');
+		data = new FormData(form);
+		//jQuery(form).remove();
+		if(jQuery('#slideCont').length) jQuery('#slideCont').css({left:'100%'});
+		jQuery.ajax({
+				type: "POST",
+				url: "includes/"+action,
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					//console.log(response);
+					jQuery('.popFormCont').html('').hide();
+					hideLoading();		
+					if(response == "added" || response == "updated" || response == "registered" || response == "Booked"){
+						alert('Successfully '+response+'.');
+						window.location.reload();
+					}
+					else if(response.indexOf('Mailer Error')>=0){
+						message = '';
+						if(response.indexOf('registered')>=0){
+							message += "Band registration successfull.\n";
+						}
+						else if(response.indexOf('Booked')>=0)
+						alert(message+"Failed to send email.");
+					}
+					else if(response=="id_number exist"){
+						alert("Booking found with the same Aadhaar or Passport Number.");
+					}
+				}
+		});		
+	}
+	return false;
+}
+
+function search(form){
+	var resCont = jQuery('#searchResult');
+	showLoading();
+	data = new FormData(form);
+	jQuery.ajax({
+			type: "POST",
+			url: "includes/"+jQuery(form).attr('action'),
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+				resCont.html(response);
+				hideLoading();
+			}
+	});
+	return false;
+}
+
+function createEditor(id){
+	//if(tinymce.editors.length) tinymce.execCommand('mceAddControl',true,id);
+	//else tinymce.init({selector: "#"+id});
+	
+	if(tinymce.editors.length){
+		jQuery('#'+id).tinymce();
+		console.log('added');
+	}
+	else {
+
+		// version 3x
+		jQuery('#'+id).tinymce({
+			script_url : 'tiny_mce/tiny_mce.js',
+
+			// General options
+			height : 300,
+			theme : "advanced",
+			//plugins : "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,fmath_formula,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,advlist,jbimages",
+			plugins : "autolink,lists,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,advlist,jbimages",
+
+			// Theme options
+			theme_advanced_buttons1 : "undo,redo,|,bold,italic,underline,strikethrough,|,forecolor,backcolor,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect,|,fullscreen",
+			theme_advanced_buttons2 : "bullist,numlist,|,search,replace,|,outdent,indent,blockquote,sub,sup,|,link,unlink,anchor,cleanup,removeformat,|,hr,charmap,emotions,|,insertdate,inserttime,|,ltr,rtl,|,visualchars,nonbreaking,pagebreak",
+			theme_advanced_buttons3 : "tablecontrols,|,jbimages,image,|,insertlayer,moveforward,movebackward,absolute,|,cite,abbr,acronym,del,ins,attribs,|,styleprops,code",
+			theme_advanced_toolbar_location : "top",
+			theme_advanced_toolbar_align : "left",
+			theme_advanced_statusbar_location : "bottom",
+			theme_advanced_resizing : true,
+
+			// Example content CSS (should be your site CSS)
+			content_css : "../css/econtent.css"
+			,external_image_list_url : "../includes/imageList.php"
+
+		});
+	}
+
+}
+
+function removeEditor(id){
+	jQuery('#'+id).tinymce().remove();
+	jQuery('.popFormCont').remove();
+	hideOverlay();
+}
+
+
+function updateArticle(form){
+	try{if(jQuery(form).find('input[name=title]').val().trim()=="") {
+		alert('Please provide a title.');
+		return false;
+	}
+	else{
+		jQuery('#loading').show();
+		tarea = jQuery(form).find('textarea:first');
+		htm   = '';
+		if(tarea.siblings('#econtentTxtarea_parent').length) htm = tarea.siblings('#econtentTxtarea_parent').find('iframe').contents().find("#tinymce").html();
+		else if(tarea.prev().find('iframe').length) htm = tarea.prev().find('iframe').contents().find("#tinymce").html();
+
+		removeEditor('econtentTxtarea');
+		if(htm!='') tarea.val(htm.replace('<br data-mce-bogus=\"1\">','')).html(htm.replace('<br data-mce-bogus=\"1\">',''));
+
+		data = new FormData(form);
+		jQuery.ajax({
+				type: "POST",
+				url: "includes/addEditArticle.php",
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function(data) {
+					if(data=='added' || data=='updated') {
+						window.location.reload();
+					}
+					else alert(data);
+				}
+		});
+	}
+	jQuery(form).closest('.popFormCont').remove();
+	hideOverlay();
+	}
+	catch(e){console.log(e)}
+	return false;
+}
+
+
+function updateGallery(form){
+
+	if(jQuery(form).find('input[name=albumName]').val().trim()!="") {
+		showLoading();
+		data = new FormData(form);
+		jQuery.ajax({
+				type: "POST",
+				url: "includes/addEditGallery.php",
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function(data) {//console.log(data);
+					hideLoading();
+					jQuery(form).hide()
+
+					if(data=="added" || data=="updated"){
+						window.location.reload();
+					}
+					else if(data=="size"){
+						alert("File is bigger than the supported size (1mb or less).");
+					}
+					else if(data=="format"){
+						alert("Invalid file format!\nSuported file formats are JPEG, PNG and GIF images");
+					}
+				}
+		});
+	}
+	else alert('Please provide the album name.');
+	return false;
+
+}
+
+/*
+function updateNotice(form){
+	path = "";
+	if(jQuery(form).find('input[name=from]').length) path += jQuery(form).find('input[name=from]').val()=='root'?'includes/addEditNoticeboard.php':'../includes/addEditNoticeboard.php';
+	else path = '../includes/addEditNoticeboard.php';
+	if(jQuery(form).find('input[name=notice]').val().trim()!="") {
+		jQuery('#loading').show();
+		data = new FormData(form);
+		jQuery.ajax({
+				type: "POST",
+				url: path,
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function(data) {
+					jQuery('#loading,.popFormCont').hide();
+					if(data=='not json') alert("Please upload the file downloaded from SIMSLite Application (Session Info > Online Results).")
+					else if(data=='error') alert('Sorry the attached file could not be uploaded.')
+					else if(data=="added" || data=="updated") jQuery('.navHeader li.on>a').click();
+					else if(data=="added and reload" || data=="updated and reload") window.location.reload();
+				}
+		});
+	}
+	cancelUpdate('#facilitiesCont');
+	return false;
+}
+*/
+
+
+function cancelUpdate(id){
+	hideOverlay();
+	jQuery(id).html('').hide();
+	return false;
+}
+
+
+function submit_enquiry(form) {
+    showLoading();
+    if(!form.checkValidity()) {
+        form.reportValidity();
+        hideLoading();
+        return false;
+    }
+	data = new FormData(form);
+	var captcha = jQuery('#captcha', form);
+	jQuery.post('includes/verify.php', 'captcha='+captcha.val(), function(resp){
+	   if(resp=='y') {
+	        data.append('capcha',1);
+            jQuery.ajax({
+        		type: "POST",
+        		url: jQuery(form).attr('action'),
+        		data: data,
+        		processData: false,
+        		contentType: false,
+        		success: function(data) {//console.log(data);
+        			hideLoading();
+        			if(data=="sent"){
+        			    alert("Email sent successfully")
+        				window.location.reload();
+        			}
+        			else alert(data);
+        		}
+            });
+	   }
+	   else {
+	       post = false;
+	       alert("Wrong captcha.");
+	       captcha.focus();
+	       hideLoading();
+	       return false;
+	   }
+	});
+	return false;
+}

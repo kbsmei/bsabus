@@ -1,0 +1,93 @@
+html,body{margin:0;padding:0;font-family:'sans-serif';font-size:12px;}
+body{background-color:#fcfcfc}
+section *{box-sizing:border-box;}
+.fl{float:left}
+.noTemplate{width:30%;background-color:#eee;border:solid 3px #ccc;border-radius:10px;padding:50px 20px;margin:10% auto 0;text-align:center;font-size:1.2em}
+.noTemplate header{text-transform:uppercase;font-weight:bold;padding-bottom:5px;font-size:1.2em}
+.wrapper{width:100%;margin:auto;overflow:hidden;}
+#logo_admin{text-align:center;}
+.pageTitle {text-align: center;text-transform:uppercase;}
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);z-index:1000}
+#loading{background:url('../images/loading.gif') no-repeat center center rgba(0,0,0,0.8);width:100%;height:100%;position:fixed;left:0;top:0;z-index:10000}
+
+.login header{height:140px;}
+.login header h1{color:#000;text-transform:uppercase;font-weight:normal;font-size:1.2em;}
+.login #loginSec{margin:0 auto;width:350px;clear:both;padding-top:20px}
+.login #loginSec form{margin:20px 0;padding:30px;box-shadow:0 0 20px #200;border-radius:20px}
+.login #loginSec h2{margin:auto;width:35%;text-transform:uppercase;padding:10px 0;}
+.login #loginSec input[type=text],.login #loginSec input[type=password]{display:block;margin:15px 0;width:96%;background-color:rgba(200,0,0,0.1);border:solid 1px rgba(200,0,0,0.3);padding:6px 2%}
+/*{color:#fff;margin:15px auto 0;background:#e00;text-transform:uppercase;width:46%}*/
+.settings{background:#fff url('../images/settings.png.html') no-repeat center center;position:absolute;left:5px;top:5px;padding:10px;border-radius:20px;cursor:pointer}
+#loginInfo{position:absolute;top:0px;right:0;padding:10px 45px;text-align:right}
+#loginInfo .name,#loginInfo .role{font-size:1.2em;line-height:1em;text-transform:capitalize}
+#loginInfo .role{font-style:italic;color:#333}
+#loginInfo .btns{position:absolute;top:0;right:0}
+#loginInfo .btns a{width:35px;height:35px;display:block;margin-left:5px;}
+.logout{background:transparent url('../images/logout.png') no-repeat left center;position:absolute;right:0;top:0;padding:5px 10px 5px 15px;color:#e60}
+#loginInfo .settings{background:#333 url('../images/settings.png.html') no-repeat 7px 6px;}
+.lastLogin{background-color:rgba(255,255,255,0.5);border-radius:5px;padding:2px 6px;color:#666;display:block;margin-top:5px;}
+.settingsMenu{position:absolute;right:0;padding:10px;margin-top:7px;background-color:#333;display:none}
+
+.popFormCont{display:none;width:75%;position:fixed;left:calc(45% - 500px);top:60px;border:solid 1px #3f3232;background-color:#fff;z-index:1001;box-shadow:0 0 5px #000;border-radius:5px;}
+/*.popFormCont{display:none;width:75%;position:fixed; left:calc(45% - 500px); top:60px; margin: 0 auto;border:solid 1px #3f3232;background-color:#fff;z-index:1001;box-shadow:0 0 5px #000;border-radius:5px;}*/
+
+
+
+.popFormCont h3{text-transform:uppercase;padding:5px 10px;font-weight:normal;margin:0;background-color:#3f3232;color:#fff;}
+.popFormCont form{padding:1%;overflow:hidden}
+.popFormCont label{margin:8px 0;}
+.popFormCont label{display:inline-block;width:225px;padding-right:4px;text-align:right;}
+.popFormCont input[type=text],.popFormCont input[type=password]{width:220px;padding:2px}
+.popFormCont input[type=file]{font-family: calibri, arial;font-size:0.8em;border:1px solid #ccc;width:225px;border-radius:2px}
+.popFormCont select{width:226px;padding:2px}
+.popFormCont textarea{padding:2px;box-sizing:border-box}
+.popFormCont input[type=button],.popFormCont input[type=submit]{margin:8px 2px; padding: 7px; width: 100px;}}
+.popFormCont .buttons{position:absolute;bottom:0;left:0;width:100%;}
+.popFormCont .content{text-align:center;padding:20px;}
+.popFormCont .radioCont{display:inline-block;width:225px}
+.popFormCont .radioCont .radioLbl{width:auto;display:inline;margin:0 5px 0 0;}
+.popFormCont .radioCont .radioLbl input{pargin:0}
+.popFormCont .notice textarea{width:280px;height:130px}
+.popFormCont .notice .attachment{position:absolute;top:40px;width:270px;right:10px}
+.popFormCont .notice .attachment label{text-align:left;display:block}
+
+.popFormCont .albumForm *{box-sizing:border-box}
+.popFormCont .albumPhotos{border:solid 1px #ccc;border-radius:3px;}
+.popFormCont .albumPhotos input[type="text"],.popFormCont .albumPhotos input[type="file"],.popFormCont .albumPhotos table{width:100%}
+.addAPRow{background-color:#390;color:#fff;cursor:pointer;padding:1px 8px}
+.apThumb{position:relative;width:50px;height:50px;}
+.apThumb img{width:auto;height:50px;clip:rect(0,50px,50px,0);position:absolute;left:0;top:0}
+
+.addArticle,.editArticle,.addAlbum,.editAlbum,.addNotice,.editNotice,.published,.unpublished{display:inline-block;padding:2px 5px;background-color:#000;color:#fff;border-radius:3px;box-shadow:0 0 3px #fff;cursor:pointer;margin:12px 2px 2px 0}
+.current .editArticle,.current .published,.current .unpublished{position:absolute}
+.current .published,.current .unpublished{left:32px}
+.addArticle,.addAlbum{background-color:#390}
+.published{background-color:#06e}
+.unpublished{background-color:#e00}
+
+.adminPage{background: #333 url('../images/bg1.png') center -20px no-repeat;} 
+.adminPage a{color:#f90; text-decoration:none;}
+.goschoolLogo img {  width: 110px;}
+.intro {  font-size: 1.5em;   margin: 30px 20%;  text-align: center;  text-shadow: 0 0 10px #000; color:#fff;}
+.intro p{padding:0; margin:0}
+.intro h1{padding:0; margin:4px; text-transform: uppercase;}
+.container{display:flex; flex-wrap:nowrap;} 
+
+.appInfo{width:50%; padding:40px; background-color:#f90; margin-left:12%;}
+.appLogin{width:50%; padding:40px; margin-right:12%; background-color: rgba(0,0,0,0.1);}
+.adminHeader{background-color: rgba(40,40,40,0.9);padding: 5px 30px 10px;border-top: solid 5px #000;height: 55px;box-sizing: border-box;}
+
+#schoolInfo{margin: 10px auto;text-align:center;}
+#schoolInfo .logo >img{width:120px;border-radius: 10px;}
+#schoolInfo h2{padding:0; font-size:2em; margin:0; color:#fff;}
+#schoolInfo h3{padding:0; font-size:1.2em; margin:0;color:#fff;}
+#loginSec{width:300px;margin:20px auto 0;text-align:center}
+#loginSec form{padding:30px;color:#fff;border-radius:10px;margin-top:-14px}
+#loginSec h1{margin:0;text-transform:uppercase;color: #999;font-weight:normal;padding:7px 20px 3px;display:inline-block;border-radius:50px 50px 0 0 }
+#loginSec form input{width:100%;display:block;margin:10px 0; padding:10px;}
+#loginSec form input[type='submit']{background-color:#fd0;border:none;margin-top:15px;text-transform:uppercase;padding:10px 20px;cursor:pointer;border-radius:3px;}
+footer {    background-color: rgba(20,20,20,0.9);  padding: 10px;  position: fixed;  bottom: 0;  width: 100%;  text-align: center;  font-size: 0.9em; color: #999}
+/* Custom content code layout */
+.col2_thumb{float: left;width: 49%;text-align: center;margin: 4px 0 2px 4px;}
+.col2_thumb h2{}
+.col2_thumb img{ padding: 0 16px;}

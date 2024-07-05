@@ -1,0 +1,18 @@
+/* SLIMBOX */
+
+#lbOverlay {position: fixed;z-index: 9999;left: 0;top: 0;width: 100%;height: 100%;background-color: #000;cursor: pointer;}
+#lbCenter, #lbBottomContainer {position: absolute;z-index: 9999;background-color: #fff;}
+#lbBottomContainer{overflow: hidden;display:none}
+.lbLoading {background: #000 url(../images/loading.gif) no-repeat center;}
+#lbImage {position: absolute;left: 0;top: 0;border: 10px solid #fff;background-repeat: no-repeat;background-size:100% 100%;}
+#lbPrevLink,  #lbNextLink{display:block;outline: none;position: absolute;top:0;width:50%;}
+#lbPrevLink::before, #lbNextLink:before{visibility:hidden;background-color:rgba(255,255,255,0.5);color:#000;margin:60% 0;font-size:1.4em}
+#lbPrevLink::before{content:'prev';border-radius:0 5px 5px 0;float:left;padding:5px 10px 5px 5px}
+#lbNextLink::before{content:'next';border-radius:5px 0 0 5px;float:right;padding:5px 5px 5px 10px}
+#lbPrevLink {left: 0;}#lbNextLink {right: 0;}
+#lbPrevLink:hover::before,#lbNextLink:hover::before{visibility:visible}
+#lbBottom {font-family: Verdana, Arial;font-size: 10px;color: #666;line-height: 1.4em;text-align: left;border: 10px solid #fff;border-top-style: none;}
+#lbCloseLink {display:block;position:absolute;right:-20px;top:-20px;z-index:100;margin:0;font-family:verdana;text-align:center;color:#fff;text-decoration:none}
+#lbCloseLink::before{content:'x';width:20px;height:20px;line-height:16px;display:block;border:solid 3px #fff;background-color:#e00;border-radius:20px;box-shadow:0 0 3px #000;padding:1px 0 0 1px}
+#lbCaption, #lbNumber {	margin-right: 71px;}
+#lbCaption {font-weight: bold;}
